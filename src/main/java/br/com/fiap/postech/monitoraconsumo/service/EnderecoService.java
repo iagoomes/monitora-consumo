@@ -1,5 +1,6 @@
 package br.com.fiap.postech.monitoraconsumo.service;
 
+import br.com.fiap.postech.monitoraconsumo.dominio.Eletrodomestico;
 import br.com.fiap.postech.monitoraconsumo.dominio.Endereco;
 import br.com.fiap.postech.monitoraconsumo.dominio.Pessoa;
 import br.com.fiap.postech.monitoraconsumo.form.EnderecoForm;
@@ -7,6 +8,7 @@ import br.com.fiap.postech.monitoraconsumo.form.PessoaForm;
 import br.com.fiap.postech.monitoraconsumo.repository.IEnderecoRepository;
 import br.com.fiap.postech.monitoraconsumo.service.exception.ControllerNotFoundException;
 import br.com.fiap.postech.monitoraconsumo.service.exception.DatabaseException;
+import br.com.fiap.postech.monitoraconsumo.service.exception.ServiceException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,6 +27,9 @@ public class EnderecoService {
 
     @Autowired
     private PessoaService pessoaService;
+
+    @Autowired
+    private EletrodomesticoService eletrodomesticoService;
 
     public Collection<Endereco> findAll() {
         var enderecos = enderecoRepository.findAll();
@@ -71,8 +76,20 @@ public class EnderecoService {
     public Endereco adicionarPessoa(UUID idEndereco, UUID idPessoa) {
         Pessoa pessoa = pessoaService.findById(idPessoa);
         Endereco endereco = findById(idEndereco);
+        if(endereco.getPessoas().contains(pessoa))
+            throw new ServiceException("Pessoa já cadastrada para o endereço!");
         endereco.addPessoa(pessoa);
         pessoaService.save(pessoa);
+        return endereco;
+    }
+
+    public Endereco adicionarEletrodomestico(UUID idEndereco, UUID idEletrodomestico) {
+        Eletrodomestico eletrodomestico = eletrodomesticoService.findById(idEletrodomestico);
+        Endereco endereco = findById(idEndereco);
+        if(endereco.getPessoas().contains(eletrodomestico))
+            throw new ServiceException("Eletroméstico já cadastrado para o endereço!");
+        endereco.addEletrodomestico(eletrodomestico);
+        eletrodomesticoService.save(eletrodomestico);
         return endereco;
     }
 

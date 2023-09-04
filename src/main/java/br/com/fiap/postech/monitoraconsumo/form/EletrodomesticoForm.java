@@ -1,6 +1,7 @@
 package br.com.fiap.postech.monitoraconsumo.form;
 
 import br.com.fiap.postech.monitoraconsumo.dominio.Eletrodomestico;
+import br.com.fiap.postech.monitoraconsumo.dominio.Usuario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
-public class EletrodomesticoForm {
+public class EletrodomesticoForm  {
 
     @JsonProperty
     private UUID id;
@@ -26,19 +27,17 @@ public class EletrodomesticoForm {
     @Positive(message = "Potência não pode ser negativa ou zero.")
     private BigDecimal potencia;
 
-    public EletrodomesticoForm(Eletrodomestico eletrodomestico) {
-        this.id = eletrodomestico.getId();
-        this.nome = eletrodomestico.getNome();
-        this.modelo = eletrodomestico.getModelo();
-        this.potencia = eletrodomestico.getPotencia();
-    }
+    @JsonProperty
+    @NotNull(message = "Id do usuário é um campo obrigatório e não pode estar em branco.")
+    private UUID idUsuario;
 
     public Eletrodomestico toEletrodomestico() {
         return new
                 Eletrodomestico()
-                .setNome(nome)
-                .setModelo(modelo)
-                .setPotencia(potencia);
+                    .setNome(nome)
+                    .setModelo(modelo)
+                    .setPotencia(potencia)
+                    .setUsuario(new Usuario().setId(idUsuario));
     }
 
 }

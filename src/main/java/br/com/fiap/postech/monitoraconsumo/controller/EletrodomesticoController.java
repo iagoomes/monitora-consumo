@@ -3,6 +3,7 @@ package br.com.fiap.postech.monitoraconsumo.controller;
 import br.com.fiap.postech.monitoraconsumo.dominio.Eletrodomestico;
 import br.com.fiap.postech.monitoraconsumo.form.EletrodomesticoForm;
 import br.com.fiap.postech.monitoraconsumo.service.EletrodomesticoService;
+import br.com.fiap.postech.monitoraconsumo.service.UsuarioService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
 import jakarta.validation.Validator;
@@ -23,6 +24,8 @@ public class EletrodomesticoController {
 
     @Autowired
     private EletrodomesticoService eletrodomesticoService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Autowired
     private Validator validator;
@@ -53,6 +56,8 @@ public class EletrodomesticoController {
         if (!violacoesToMap.isEmpty())
             return ResponseEntity.badRequest().body(violacoesToMap);
         var eletrodomestico = eletrodomesticoForm.toEletrodomestico();
+        var usuario = usuarioService.findById(eletrodomestico.getUsuario().getId());
+        eletrodomestico.setUsuario(usuario);
         var eletrodomesticoSaved = eletrodomesticoService.save(eletrodomestico);
         eletrodomesticoForm.setId(eletrodomesticoSaved.getId());
         var uri =

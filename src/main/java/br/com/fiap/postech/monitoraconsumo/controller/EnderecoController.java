@@ -1,7 +1,6 @@
 package br.com.fiap.postech.monitoraconsumo.controller;
 
 import br.com.fiap.postech.monitoraconsumo.dominio.Endereco;
-import br.com.fiap.postech.monitoraconsumo.dominio.Pessoa;
 import br.com.fiap.postech.monitoraconsumo.form.EnderecoForm;
 import br.com.fiap.postech.monitoraconsumo.service.EnderecoService;
 import br.com.fiap.postech.monitoraconsumo.service.UsuarioService;
@@ -86,6 +85,13 @@ public class EnderecoController {
     public ResponseEntity adicionarPessoaAoEndereco(@PathVariable UUID idEndereco,
                                                     @PathVariable UUID idPessoa) {
         Endereco endereco = enderecoService.adicionarPessoa(idEndereco, idPessoa);
+        return ResponseEntity.ok(endereco);
+    }
+
+    @PostMapping("{idEndereco}/adicionarEletrodomestico/{idEletrodomestico}")
+    public ResponseEntity adicionarEletrodomesticoAoEndereco(@PathVariable UUID idEndereco,
+                                                    @PathVariable UUID idEletrodomestico) {
+        Endereco endereco = enderecoService.adicionarEletrodomestico(idEndereco, idEletrodomestico);
         return ResponseEntity.ok(endereco);
     }
 

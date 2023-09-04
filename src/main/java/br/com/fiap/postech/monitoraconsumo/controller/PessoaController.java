@@ -5,6 +5,7 @@ import br.com.fiap.postech.monitoraconsumo.dominio.Pessoa;
 import br.com.fiap.postech.monitoraconsumo.dominio.Sexo;
 import br.com.fiap.postech.monitoraconsumo.form.PessoaForm;
 import br.com.fiap.postech.monitoraconsumo.service.PessoaService;
+import br.com.fiap.postech.monitoraconsumo.service.UsuarioService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
 import jakarta.validation.Validator;
@@ -24,6 +25,8 @@ public class PessoaController {
 
     @Autowired
     private PessoaService pessoaService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Autowired
     private Validator validator;
@@ -54,6 +57,8 @@ public class PessoaController {
         if (!violacoesToMap.isEmpty())
             return ResponseEntity.badRequest().body(violacoesToMap);
         var pessoa = pessoaForm.toPessoa();
+        var usuario = usuarioService.findById(pessoa.getUsuario().getId());
+        pessoa.setUsuario(usuario);
         var pessoaSaved = pessoaService.save(pessoa);
         pessoaForm.setId(pessoaSaved.getId());
         var uri =

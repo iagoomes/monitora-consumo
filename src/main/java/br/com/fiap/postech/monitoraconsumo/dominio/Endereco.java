@@ -36,6 +36,10 @@ public class Endereco {
     @JsonManagedReference
     private List<Pessoa> pessoas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "endereco", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Eletrodomestico> eletrodomesticos = new ArrayList<>();
+
     public Endereco setId(UUID id) {
         this.id = id;
         return this;
@@ -74,6 +78,11 @@ public class Endereco {
     public void addPessoa(Pessoa pessoa) {
         this.getPessoas().add(pessoa);
         pessoa.setEndereco(this);
-   }
+    }
+
+    public void addEletrodomestico(Eletrodomestico eletrodomestico) {
+        this.getEletrodomesticos().add(eletrodomestico);
+        eletrodomestico.setEndereco(this);
+    }
 
 }

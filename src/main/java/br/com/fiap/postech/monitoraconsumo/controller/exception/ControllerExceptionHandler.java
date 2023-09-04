@@ -3,6 +3,7 @@ package br.com.fiap.postech.monitoraconsumo.controller.exception;
 import br.com.fiap.postech.monitoraconsumo.service.exception.ControllerNotFoundException;
 import br.com.fiap.postech.monitoraconsumo.service.exception.DatabaseException;
 import br.com.fiap.postech.monitoraconsumo.service.exception.DefaultError;
+import br.com.fiap.postech.monitoraconsumo.service.exception.ServiceException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,17 @@ public class ControllerExceptionHandler {
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
         error.setError("Database error");
+        error.setMessage(exception.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(this.error);
+    }
+
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<DefaultError> entity(ServiceException exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Entidade já cadastrada");
         error.setMessage(exception.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(this.error);

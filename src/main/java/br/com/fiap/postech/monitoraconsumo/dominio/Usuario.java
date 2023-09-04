@@ -26,6 +26,10 @@ public class Usuario {
     @JsonManagedReference
     private List<Endereco> enderecos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Pessoa> pessoas = new ArrayList<>();
+
     public Usuario setId(UUID id) {
         this.id = id;
         return this;
@@ -38,6 +42,11 @@ public class Usuario {
 
     public Usuario setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
+        return this;
+    }
+
+    public Usuario setPessoas(List<Pessoa> pessoas) {
+        this.pessoas = pessoas;
         return this;
     }
 }

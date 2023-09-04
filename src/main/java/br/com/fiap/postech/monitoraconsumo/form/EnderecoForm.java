@@ -1,12 +1,14 @@
 package br.com.fiap.postech.monitoraconsumo.form;
 
 import br.com.fiap.postech.monitoraconsumo.dominio.Endereco;
+import br.com.fiap.postech.monitoraconsumo.dominio.Pessoa;
 import br.com.fiap.postech.monitoraconsumo.dominio.Usuario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -34,6 +36,8 @@ public class EnderecoForm {
     @NotNull(message = "Id do usuário é um campo obrigatório e não pode estar em branco.")
     private UUID idUsuario;
 
+    private List<Pessoa> pessoas;
+
     public EnderecoForm(Endereco endereco) {
         this.id = endereco.getId();
         this.rua = endereco.getRua();
@@ -42,7 +46,10 @@ public class EnderecoForm {
         this.cidade = endereco.getCidade();
         this.estado = endereco.getEstado();
         this.setIdUsuario(endereco.getUsuario().getId());
+        this.pessoas = endereco.getPessoas();
     }
+
+    public EnderecoForm() {}
 
     public Endereco toEndereco() {
         return new Endereco()

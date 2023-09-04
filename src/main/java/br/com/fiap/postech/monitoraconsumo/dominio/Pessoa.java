@@ -29,6 +29,11 @@ public class Pessoa {
     @JoinColumn(name = "endereco.id")
     private Endereco endereco;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
+    @JoinColumn(name = "usuario.id")
+    private Usuario usuario;
+
     public Pessoa setId(UUID id) {
         this.id = id;
         return this;
@@ -56,6 +61,11 @@ public class Pessoa {
 
     public Pessoa setEndereco(Endereco endereco) {
         this.endereco = endereco;
+        return this;
+    }
+
+    public Pessoa setUsuario(Usuario usuario) {
+        this.usuario = usuario;
         return this;
     }
 }
