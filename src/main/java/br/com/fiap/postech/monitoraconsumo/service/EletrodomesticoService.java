@@ -1,6 +1,7 @@
 package br.com.fiap.postech.monitoraconsumo.service;
 
 import br.com.fiap.postech.monitoraconsumo.dominio.Eletrodomestico;
+import br.com.fiap.postech.monitoraconsumo.form.EletrodomesticoForm;
 import br.com.fiap.postech.monitoraconsumo.repository.IEletrodomesticoRepository;
 import br.com.fiap.postech.monitoraconsumo.service.exception.ControllerNotFoundException;
 import br.com.fiap.postech.monitoraconsumo.service.exception.DatabaseException;
@@ -8,10 +9,11 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -59,4 +61,11 @@ public class EletrodomesticoService {
         }
     }
 
+    public ResponseEntity<EletrodomesticoForm> getEletrodomestico(String nome, String modelo, BigDecimal potencia) {
+        Eletrodomestico findEletrodomestico = repository.getEletrodomestico(nome, modelo, potencia);
+        if (findEletrodomestico == null) throw new ControllerNotFoundException("Eletrodomestico não encontrado");
+
+        EletrodomesticoForm eletrodomesticoForm = new EletrodomesticoForm(findEletrodomestico);
+        return ResponseEntity.ok(eletrodomesticoForm);
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
@@ -38,10 +39,18 @@ public class EletrodomesticoController {
         return ResponseEntity.ok(eletrodomestico);
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<EletrodomesticoForm> findEletrodomestico(@RequestParam(name = "nome") String nome,
+                                                                   @RequestParam(name = "modelo") String modelo,
+                                                                   @RequestParam(name = "potencia") BigDecimal potencia) {
+
+        return eletrodomesticoService.getEletrodomestico(nome, modelo, potencia);
+    }
+
     @PostMapping
     public ResponseEntity save(@RequestBody EletrodomesticoForm eletrodomesticoForm) {
         var violacoesToMap = validar(eletrodomesticoForm);
-        if(!violacoesToMap.isEmpty())
+        if (!violacoesToMap.isEmpty())
             return ResponseEntity.badRequest().body(violacoesToMap);
         var eletrodomestico = eletrodomesticoForm.toEletrodomestico();
         var eletrodomesticoSaved = eletrodomesticoService.save(eletrodomestico);
@@ -54,7 +63,7 @@ public class EletrodomesticoController {
     @PutMapping("{id}")
     public ResponseEntity update(@PathVariable UUID id, @RequestBody EletrodomesticoForm eletrodomesticoForm) {
         var violacoesToMap = validar(eletrodomesticoForm);
-        if(!violacoesToMap.isEmpty())
+        if (!violacoesToMap.isEmpty())
             return ResponseEntity.badRequest().body(violacoesToMap);
         var eletrodomestico = eletrodomesticoForm.toEletrodomestico();
         var eletrodomesticoAdicionado = eletrodomesticoService.update(id, eletrodomestico);
